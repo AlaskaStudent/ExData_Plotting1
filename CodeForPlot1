@@ -1,0 +1,21 @@
+#Creating file name
+filename<-"Coursera_ExData_Project1.zip"
+
+#Checking if zip file exists
+if(!file.exists(filename)){
+  fileURL<-"https://d396qusza40orc.cloudfront.net/exdata%2Fdata%2Fhousehold_power_consumption.zip"
+  download.file(fileURL,filename,method="curl")  }
+#Checking if folder exists
+if(!file.exists("Electric Power Consumption")){
+  unzip(filename)}
+
+#read txt file in, separating columns by the ; symbol
+hpc<-read.table("household_power_consumption.txt",header=TRUE, sep=";", na.strings="?")
+#fixing date format and pulling out two dates needed
+hpc$Date<-as.Date(hpc$Date, format="%d/%m/%Y")
+feb<-subset(hpc, subset=(Date>="2007-02-01"& Date<="2007-02-02"))
+
+#create histogram, export file with correct dimensions 
+hist(feb$Global_active_power, col="red", main="Global Active Power", xlab="Global Active Power (kilowatts)")
+dev.copy(png, file="plot1.png",height=480, width=480)
+dev.off()
